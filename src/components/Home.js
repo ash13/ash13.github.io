@@ -1,6 +1,57 @@
+import React from 'react';
 import { Box, Heading, Text, VStack, HStack, Link, Image, Flex, Button } from '@chakra-ui/react';
+import { motion, useInView } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaEnvelope, FaFileAlt } from 'react-icons/fa';
 import { SiGooglescholar } from 'react-icons/si';
+
+const MotionBox = motion(Box);
+
+const TimelineItem = ({ year, title, subtitle, details }) => {
+  const ref = React.useRef();
+  const isInView = useInView(ref, {
+    threshold: 0.2,
+    triggerOnce: true
+  });
+
+  return (
+    <MotionBox
+      ref={ref}
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5 }}
+      position="relative"
+      paddingLeft="6"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        left: '-5px',
+        top: '0',
+        width: '12px',
+        height: '12px',
+        borderRadius: 'full',
+        bg: 'blue.500',
+        zIndex: 1
+      }}
+    >
+      <Text fontSize="sm" fontWeight="600" color="blue.500" mb={1}>
+        {year}
+      </Text>
+      <Text fontSize="lg" fontWeight="600" color="gray.800" mb={1}>
+        {title}
+      </Text>
+      <Text fontSize="md" color="gray.600" mb={2}>
+        {subtitle}
+      </Text>
+      <VStack align="start" spacing={1} pl={4} borderLeft="2px" borderColor="gray.100">
+        {details.map((detail, index) => (
+          <Text key={index} fontSize="sm" color="gray.600">
+            {detail}
+          </Text>
+        ))}
+      </VStack>
+    </MotionBox>
+  );
+};
 
 const Home = () => {
   return (
@@ -66,38 +117,89 @@ const Home = () => {
       </Flex>
 
       <Box>
-        <Heading as="h2" size="lg" mb={4} fontFamily="'Poppins', sans-serif">
-          Education
+        <Heading as="h2" size="lg" mb={6} fontFamily="'Poppins', sans-serif">
+          Education & Experience
         </Heading>
-        <VStack align="start" spacing={4}>
-          <Box>
-            <Text fontSize="lg" fontWeight="500" color="gray.800">
-              Ph.D. in Linguistics (Computational Linguistics)
-            </Text>
-            <Text fontSize="md" color="gray.600">
-              University of California, Santa Barbara • 2021 - 2026
-            </Text>
+        <Box position="relative" pl={10}>
+          <Box
+            position="absolute"
+            left="0"
+            top="0"
+            bottom="0"
+            width="2px"
+            bg="blue.100"
+            zIndex={0}
+          />
+          <VStack spacing={12} align="start">
+            <TimelineItem
+              year="2021 - Present"
+              title="Ph.D. in Linguistics (Computational Linguistics)"
+              subtitle="University of California, Santa Barbara"
+              details={[
+                'Research focus on Computational Linguistics and Language Acquisition',
+                'Member of CPLS and PRPL labs',
+                'Working on heritage language complexity',
+                'Teaching Assistant for undergraduate linguistics courses'
+              ]}
+            />
 
-          </Box>
-          <Box>
-            <Text fontSize="lg" fontWeight="500" color="gray.800">
-              M.S. in Computer Science
-            </Text>
-            <Text fontSize="md" color="gray.600">
-              Worcester Polytechnic Institute • 2018 - 2020
-            </Text>
+            <TimelineItem
+              year="2021 - Present"
+              title="Graduate Student Researcher"
+              subtitle="UCSB Linguistics Department"
+              details={[
+                'Developing computational models for language acquisition',
+                'Analyzing heritage language complexity patterns',
+                'Collaborating on cross-disciplinary research projects'
+              ]}
+            />
 
-          </Box>
-          <Box>
-            <Text fontSize="lg" fontWeight="500" color="gray.800">
-              B.E. in Information Science and Engineering
-            </Text>
-            <Text fontSize="md" color="gray.600">
-              BMS College of Engineering • 2011 - 2015
-            </Text>
+            <TimelineItem
+              year="2020 - 2021"
+              title="Research Assistant"
+              subtitle="The Meaning Lab, UC Irvine"
+              details={[
+                'Conducted research in computational linguistics',
+                'Collaborated on psycholinguistics projects',
+                'Contributed to language processing studies'
+              ]}
+            />
 
-          </Box>
-        </VStack>
+            <TimelineItem
+              year="2018 - 2020"
+              title="Graduate Research Assistant"
+              subtitle="Worcester Polytechnic Institute"
+              details={[
+                'Specialized in Human-Computer Interaction',
+                'Research in Educational Technology',
+                'Collaborated with Child Computer Interaction Lab (ChiCI)',
+                'Developed educational software solutions'
+              ]}
+            />
+
+            <TimelineItem
+              year="2015 - 2018"
+              title="Software Engineer"
+              subtitle="Tata Consultancy Services"
+              details={[
+                'Led development of enterprise software solutions',
+                'Managed cross-functional teams and client relationships',
+                'Implemented large-scale data processing systems'
+              ]}
+            />
+
+            <TimelineItem
+              year="2011 - 2015"
+              title="B.E. in Information Science and Engineering"
+              subtitle="BMS College of Engineering"
+              details={[
+                'Foundation in computer science and engineering',
+                'Focus on information systems and software development',
+                'Undergraduate research in data analytics'
+              ]}
+            />
+          </VStack>
+        </Box>
       </Box>
 
       <Box>
