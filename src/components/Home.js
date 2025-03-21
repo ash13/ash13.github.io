@@ -77,9 +77,7 @@ const Home = () => {
             <Text fontSize="md" color="gray.600">
               University of California, Santa Barbara • 2021 - 2026
             </Text>
-            <Text fontSize="md" color="gray.600">
-              Advisors: Dr. Simon Todd, Dr. Laurel Brehm • GPA: 4.0
-            </Text>
+
           </Box>
           <Box>
             <Text fontSize="lg" fontWeight="500" color="gray.800">
@@ -88,9 +86,7 @@ const Home = () => {
             <Text fontSize="md" color="gray.600">
               Worcester Polytechnic Institute • 2018 - 2020
             </Text>
-            <Text fontSize="md" color="gray.600">
-              Advisor: Dr. Neil Heffernan • GPA: 4.0
-            </Text>
+
           </Box>
           <Box>
             <Text fontSize="lg" fontWeight="500" color="gray.800">
@@ -99,9 +95,7 @@ const Home = () => {
             <Text fontSize="md" color="gray.600">
               BMS College of Engineering • 2011 - 2015
             </Text>
-            <Text fontSize="md" color="gray.600">
-              GPA: 9.44/10
-            </Text>
+
           </Box>
         </VStack>
       </Box>
