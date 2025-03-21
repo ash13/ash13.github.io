@@ -46,11 +46,11 @@ const Home = () => {
           overflow="hidden"
           boxShadow="lg"
           border="3px solid"
-          borderColor="primary.100"
+          borderColor="white"
           transition="all 0.3s ease"
           _hover={{
             transform: 'scale(1.02)',
-            borderColor: 'primary.200',
+            borderColor: 'white',
             boxShadow: 'xl'
           }}
         >
