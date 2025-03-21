@@ -137,20 +137,9 @@ const Home = () => {
               subtitle="University of California, Santa Barbara"
               details={[
                 'Research focus on Computational Linguistics and Language Acquisition',
-                'Member of CPLS and PRPL labs',
-                'Working on heritage language complexity',
-                'Teaching Assistant for undergraduate linguistics courses'
-              ]}
-            />
-
-            <TimelineItem
-              year="2021 - Present"
-              title="Graduate Student Researcher"
-              subtitle="UCSB Linguistics Department"
-              details={[
-                'Developing computational models for language acquisition',
-                'Analyzing heritage language complexity patterns',
-                'Collaborating on cross-disciplinary research projects'
+                'Member of CPLS (Computational Psycholinguistics For Listening And Speaking) lab',
+                'Member of PRPL (Producing and Perceiving Language) lab',
+                'Research in heritage language complexity'
               ]}
             />
 
@@ -160,20 +149,19 @@ const Home = () => {
               subtitle="The Meaning Lab, UC Irvine"
               details={[
                 'Conducted research in computational linguistics',
-                'Collaborated on psycholinguistics projects',
-                'Contributed to language processing studies'
+                'Contributed to psycholinguistics research',
+                'Collaborated on language processing studies'
               ]}
             />
 
             <TimelineItem
               year="2018 - 2020"
-              title="Graduate Research Assistant"
+              title="M.S. in Computer Science"
               subtitle="Worcester Polytechnic Institute"
               details={[
-                'Specialized in Human-Computer Interaction',
-                'Research in Educational Technology',
-                'Collaborated with Child Computer Interaction Lab (ChiCI)',
-                'Developed educational software solutions'
+                'Research in Human-Computer Interaction',
+                'Focus on Educational Technology',
+                'Collaboration with Child Computer Interaction Lab (ChiCI) at UCLan'
               ]}
             />
 
@@ -182,9 +170,9 @@ const Home = () => {
               title="B.E. in Information Science and Engineering"
               subtitle="BMS College of Engineering"
               details={[
-                'Foundation in computer science and engineering',
-                'Focus on information systems and software development',
-                'Undergraduate research in data analytics'
+                'Focus on computer science fundamentals',
+                'Specialized in information systems',
+                'Software development and engineering principles'
               ]}
             />
           </VStack>
