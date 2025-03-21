@@ -178,17 +178,6 @@ const Home = () => {
             />
 
             <TimelineItem
-              year="2015 - 2018"
-              title="Software Engineer"
-              subtitle="Tata Consultancy Services"
-              details={[
-                'Led development of enterprise software solutions',
-                'Managed cross-functional teams and client relationships',
-                'Implemented large-scale data processing systems'
-              ]}
-            />
-
-            <TimelineItem
               year="2011 - 2015"
               title="B.E. in Information Science and Engineering"
               subtitle="BMS College of Engineering"
