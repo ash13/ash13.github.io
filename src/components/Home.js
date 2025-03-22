@@ -137,31 +137,64 @@ const Home = () => {
               subtitle="University of California, Santa Barbara"
               details={[
                 'Research focus on Computational Linguistics and Language Acquisition',
-                'Member of CPLS (Computational Psycholinguistics For Listening And Speaking) lab',
-                'Member of PRPL (Producing and Perceiving Language) lab',
-                'Research in heritage language complexity'
+                'Member of CPLS and PRPL labs',
+                'Working on heritage language complexity',
+                'Teaching Assistant for undergraduate linguistics courses'
               ]}
             />
 
             <TimelineItem
               year="2020 - 2021"
-              title="Research Assistant"
-              subtitle="The Meaning Lab, UC Irvine"
+              title="Applied Scientist"
+              subtitle="Amazon"
               details={[
-                'Conducted research in computational linguistics',
-                'Contributed to psycholinguistics research',
-                'Collaborated on language processing studies'
+                'Developed machine learning solutions',
+                'Worked on natural language processing projects',
+                'Implemented large-scale AI systems'
+              ]}
+            />
+
+            <TimelineItem
+              year="2020"
+              title="Software Engineering Intern"
+              subtitle="Fidelity Investments"
+              details={[
+                'Developed enterprise software solutions',
+                'Worked on financial technology systems',
+                'Implemented secure data processing pipelines'
               ]}
             />
 
             <TimelineItem
               year="2018 - 2020"
-              title="M.S. in Computer Science"
+              title="M.S. in Computer Science & Research Assistant"
               subtitle="Worcester Polytechnic Institute"
               details={[
-                'Research in Human-Computer Interaction',
-                'Focus on Educational Technology',
-                'Collaboration with Child Computer Interaction Lab (ChiCI) at UCLan'
+                'Research in Educational Technology with ASSISTments lab',
+                'Focus on Human-Computer Interaction',
+                'Developed learning analytics solutions'
+              ]}
+            />
+
+            <TimelineItem
+              year="2016 - 2018"
+              title="Data Analyst"
+              subtitle="Meaww"
+              details={[
+                'Led data analytics for social media startup',
+                'Developed user engagement metrics',
+                'Implemented data-driven content strategies'
+              ]}
+            />
+
+            <TimelineItem
+              year="2015 - 2016"
+              title="Software Engineer"
+              subtitle="Hewlett Packard R&D"
+              details={[
+                'Developed enterprise software solutions',
+                'Worked on R&D projects',
+                'Implemented innovative technology solutions'
               ]}
             />
 
@@ -170,9 +203,9 @@ const Home = () => {
               title="B.E. in Information Science and Engineering"
               subtitle="BMS College of Engineering"
               details={[
-                'Focus on computer science fundamentals',
-                'Specialized in information systems',
-                'Software development and engineering principles'
+                'Foundation in computer science and engineering',
+                'Focus on information systems',
+                'Software development fundamentals'
               ]}
             />
           </VStack>
