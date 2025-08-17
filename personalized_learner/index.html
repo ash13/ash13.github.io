@@ -68,6 +68,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             margin-bottom: 10px;
+            font-family: monospace;
         }
 
         .main-content {
@@ -147,12 +148,20 @@
             background: linear-gradient(45deg, rgba(76, 99, 210, 0.05) 0%, rgba(155, 89, 182, 0.05) 100%);
         }
 
+        .file-upload.dragover {
+            border-color: #9b59b6;
+            background: linear-gradient(45deg, rgba(76, 99, 210, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
+            transform: scale(1.02);
+        }
+
         .file-upload-input {
             position: absolute;
             opacity: 0;
             width: 100%;
             height: 100%;
             cursor: pointer;
+            top: 0;
+            left: 0;
         }
 
         .upload-icon {
@@ -223,10 +232,11 @@
             padding: 20px;
             min-height: 200px;
             border: 1px solid #e1e5f2;
-            font-family: 'Courier New', monospace;
             white-space: pre-wrap;
             overflow-y: auto;
             max-height: 500px;
+            font-family: inherit;
+            line-height: 1.6;
         }
 
         .sample-interests {
@@ -319,25 +329,45 @@
             width: 0%;
             transition: width 0.3s ease;
         }
+
+        .api-status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .api-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .api-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🎯 Personalized Learning Generator</h1>
-            <p>Transform any educational content into personalized learning experiences</p>
+            <p>Transform any educational content into personalized learning experiences using AI</p>
             
             <div class="api-config">
-                <h3>🔧 Configuration</h3>
-                <p><span class="config-toggle" onclick="toggleApiConfig()">Click to configure AI API (required for real personalization)</span></p>
+                <h3>🔧 OpenAI Configuration</h3>
+                <p><span class="config-toggle" onclick="toggleApiConfig()">Click to configure OpenAI API (required)</span></p>
                 <div id="apiConfigDetails" style="display: none; margin-top: 15px;">
-                    <input type="password" id="openaiApiKey" class="api-key-input" placeholder="Enter OpenAI API Key (optional - for enhanced personalization)">
-                    <select id="aiProvider">
-                        <option value="openai">OpenAI GPT</option>
-                        <option value="mock" selected>Mock/Demo Mode</option>
-                        <option value="anthropic">Anthropic Claude</option>
+                    <input type="password" id="openaiApiKey" class="api-key-input" placeholder="Enter your OpenAI API Key (sk-...)">
+                    <select id="aiModel">
+                        <option value="gpt-4">GPT-4 (Recommended)</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster/Cheaper)</option>
                     </select>
                     <button class="btn" style="margin-top: 10px; text-transform: none;" onclick="testApiConnection()">Test API Connection</button>
+                    <div id="apiStatus" class="api-status"></div>
                 </div>
             </div>
         </div>
@@ -362,24 +392,24 @@
                 <div class="form-group">
                     <label for="learningStyle">Learning Style:</label>
                     <select id="learningStyle">
-                        <option value="analogies">Analogies & Examples</option>
-                        <option value="visual">Visual Learner</option>
-                        <option value="practical">Hands-on Practical</option>
-                        <option value="storytelling">Story-based</option>
-                        <option value="technical">Technical Deep-dive</option>
+                        <option value="analogies">Analogies & Examples from my interests</option>
+                        <option value="visual">Visual learning with diagrams</option>
+                        <option value="practical">Hands-on practical examples</option>
+                        <option value="storytelling">Story-based explanations</option>
+                        <option value="technical">Technical deep-dive</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Upload Educational Content:</label>
                     <div class="file-upload-wrapper">
-                        <div class="file-upload">
+                        <div class="file-upload" id="fileUploadArea">
                             <div class="upload-icon">📄</div>
                             <div>Click to upload or drag & drop</div>
                             <div style="font-size: 14px; color: #666; margin-top: 5px;">
-                                Supports: .txt, .md files
+                                Supports: .txt, .md, .pdf files
                             </div>
-                            <input type="file" class="file-upload-input" id="fileInput" accept=".txt,.md" />
+                            <input type="file" class="file-upload-input" id="fileInput" accept=".txt,.md,.pdf" />
                         </div>
                         <div class="file-name" id="fileName"></div>
                     </div>
@@ -400,7 +430,7 @@
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <div id="loadingText">Personalizing your content...</div>
+                    <div id="loadingText">Personalizing your content with AI...</div>
                 </div>
 
                 <div class="error-message" id="errorMessage"></div>
@@ -411,17 +441,32 @@
                 <h2 class="section-title">🎨 Personalized Output</h2>
                 <div class="output-content" id="output">
                     Your personalized content will appear here...
+                    
+                    <br><br>
+                    <strong>How it works:</strong>
+                    <br>1. Enter your interests/hobbies
+                    <br>2. Choose your learning style
+                    <br>3. Upload a file or paste content
+                    <br>4. Configure OpenAI API key
+                    <br>5. Click generate!
+                    
+                    <br><br>
+                    The AI will add relevant analogies and examples from your interests throughout the content.
                 </div>
                 <button class="btn download-btn" id="downloadBtn" onclick="downloadContent()">
-                    📥 Download Personalized Content
+                    💾 Download Personalized Content
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- PDF.js for PDF parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
     <script>
         let originalContent = '';
         let personalizedContent = '';
+        let isApiConfigured = false;
 
         // Configuration functions
         function toggleApiConfig() {
@@ -430,36 +475,145 @@
         }
 
         async function testApiConnection() {
-            const provider = document.getElementById('aiProvider').value;
-            const apiKey = document.getElementById('openaiApiKey').value;
-            
-            if (provider === 'mock') {
-                showSuccess('Demo mode enabled - using mock transformations');
-                return;
-            }
+            const apiKey = document.getElementById('openaiApiKey').value.trim();
+            const statusDiv = document.getElementById('apiStatus');
             
             if (!apiKey) {
-                showError('Please enter an API key to test connection');
+                showApiStatus('Please enter an API key', 'error');
                 return;
             }
             
-            // Test API connection (implement based on your chosen provider)
-            showSuccess('API connection successful!');
+            if (!apiKey.startsWith('sk-')) {
+                showApiStatus('Invalid API key format. Should start with "sk-"', 'error');
+                return;
+            }
+
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = 'Testing connection...';
+            statusDiv.className = 'api-status';
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/models', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    isApiConfigured = true;
+                    showApiStatus('✅ API connection successful!', 'success');
+                } else {
+                    const error = await response.json();
+                    showApiStatus(`❌ API Error: ${error.error?.message || 'Invalid API key'}`, 'error');
+                }
+            } catch (error) {
+                showApiStatus(`❌ Connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        function showApiStatus(message, type) {
+            const statusDiv = document.getElementById('apiStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = message;
+            statusDiv.className = `api-status ${type}`;
+        }
+
+        // File handling functions
+        async function extractTextFromPDF(file) {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.onload = async function() {
+                    try {
+                        const typedArray = new Uint8Array(this.result);
+                        const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                        let fullText = '';
+                        
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            const pageText = textContent.items.map(item => item.str).join(' ');
+                            fullText += pageText + '\n\n';
+                        }
+                        
+                        resolve(fullText.trim());
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                fileReader.onerror = () => reject(new Error('Failed to read PDF file'));
+                fileReader.readAsArrayBuffer(file);
+            });
         }
 
         // Handle file upload
-        document.getElementById('fileInput').addEventListener('change', function(e) {
+        document.getElementById('fileInput').addEventListener('change', async function(e) {
             const file = e.target.files[0];
-            if (file) {
-                document.getElementById('fileName').textContent = `Selected: ${file.name}`;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    originalContent = e.target.result;
-                    document.getElementById('textContent').value = originalContent;
-                };
-                reader.readAsText(file);
+            if (!file) return;
+
+            document.getElementById('fileName').textContent = `Selected: ${file.name}`;
+            
+            try {
+                let content = '';
+                
+                if (file.type === 'application/pdf') {
+                    document.getElementById('fileName').textContent += ' (Extracting text...)';
+                    content = await extractTextFromPDF(file);
+                } else {
+                    // Text files
+                    content = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = e => resolve(e.target.result);
+                        reader.onerror = () => reject(new Error('Failed to read file'));
+                        reader.readAsText(file);
+                    });
+                }
+                
+                originalContent = content;
+                document.getElementById('textContent').value = content;
+                document.getElementById('fileName').textContent = `✅ Loaded: ${file.name} (${content.length} characters)`;
+                
+            } catch (error) {
+                showError(`Failed to process file: ${error.message}`);
+                document.getElementById('fileName').textContent = `❌ Failed to load: ${file.name}`;
             }
         });
+
+        // Drag and drop functionality
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileUploadArea.addEventListener(eventName, () => {
+                fileUploadArea.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileUploadArea.addEventListener(eventName, () => {
+                fileUploadArea.classList.remove('dragover');
+            }, false);
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                fileInput.files = files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        }, false);
 
         // Add interest tags
         function addInterest(interest) {
@@ -470,13 +624,14 @@
             }
         }
 
-        // Generate personalized content
+        // Generate personalized content with OpenAI
         async function generatePersonalizedContent() {
             const interests = document.getElementById('interests').value.trim();
             const learningStyle = document.getElementById('learningStyle').value;
             const textContent = document.getElementById('textContent').value.trim();
-            const provider = document.getElementById('aiProvider').value;
+            const apiKey = document.getElementById('openaiApiKey').value.trim();
 
+            // Validation
             if (!interests) {
                 showError('Please enter your interests or hobbies!');
                 return;
@@ -487,23 +642,25 @@
                 return;
             }
 
-            // Show loading with progress
+            if (!apiKey) {
+                showError('Please configure your OpenAI API key first!');
+                return;
+            }
+
+            if (textContent.length > 15000) {
+                showError('Content is too long. Please use content under 15,000 characters for better results.');
+                return;
+            }
+
+            // Show loading
             showLoading();
             hideMessages();
 
             try {
-                if (provider === 'openai') {
-                    personalizedContent = await personalizeWithOpenAI(textContent, interests, learningStyle);
-                } else if (provider === 'anthropic') {
-                    personalizedContent = await personalizeWithClaude(textContent, interests, learningStyle);
-                } else {
-                    // Mock/demo mode
-                    personalizedContent = await personalizeContentMock(textContent, interests, learningStyle);
-                }
-
+                personalizedContent = await personalizeWithOpenAI(textContent, interests, learningStyle, apiKey);
                 document.getElementById('output').textContent = personalizedContent;
                 document.getElementById('downloadBtn').style.display = 'block';
-                showSuccess('Content personalized successfully!');
+                showSuccess('Content personalized successfully! 🎉');
                 
             } catch (error) {
                 showError('Error generating content: ' + error.message);
@@ -512,19 +669,31 @@
             }
         }
 
-        // API integration functions
-        async function personalizeWithOpenAI(content, interests, learningStyle) {
-            const apiKey = document.getElementById('openaiApiKey').value;
-            if (!apiKey) {
-                throw new Error('OpenAI API key required');
-            }
+        // OpenAI API integration
+        async function personalizeWithOpenAI(content, interests, learningStyle, apiKey) {
+            const model = document.getElementById('aiModel').value;
 
-            const prompt = `Transform this educational content to be personalized for someone interested in: ${interests}. 
-                           Use a ${learningStyle} learning approach. 
-                           Keep all original technical content intact but add relevant analogies and examples.
-                           
-                           Original content:
-                           ${content}`;
+            const prompt = `You are an expert educational content personalizer. Your task is to transform the given educational content by adding relevant analogies, examples, and explanations that connect to the learner's specific interests.
+
+INSTRUCTIONS:
+1. Keep ALL original technical content, concepts, and information intact
+2. Add personalized analogies and examples from these interests: ${interests}
+3. Use ${learningStyle} learning approach
+4. Insert relevant connections throughout the content, not just at the end
+5. Make the content more engaging while preserving educational value
+6. Don't remove any important information - only enhance and personalize
+
+For each major concept or section, try to include a relevant analogy or example from the learner's interests: ${interests}
+
+Learning style to use: ${learningStyle}
+
+Original content to personalize:
+
+${content}
+
+Please return the enhanced, personalized version:`;
+
+            updateProgress(20);
 
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -533,119 +702,44 @@
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
-                    model: 'gpt-4',
-                    messages: [{ role: 'user', content: prompt }],
-                    max_tokens: 4000
+                    model: model,
+                    messages: [{ 
+                        role: 'user', 
+                        content: prompt 
+                    }],
+                    max_tokens: 4000,
+                    temperature: 0.7
                 })
             });
 
+            updateProgress(60);
+
             if (!response.ok) {
-                throw new Error('OpenAI API request failed');
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || `API request failed (${response.status})`);
             }
 
             const data = await response.json();
-            return data.choices[0].message.content;
-        }
+            updateProgress(90);
 
-        async function personalizeWithClaude(content, interests, learningStyle) {
-            // Implement Claude API integration
-            throw new Error('Claude API integration not implemented yet');
-        }
-
-        // Mock personalization (for demo)
-        async function personalizeContentMock(content, interests, learningStyle) {
-            updateProgress(20);
-            
-            const interestList = interests.split(',').map(i => i.trim().toLowerCase());
-            let personalizedContent = content;
-
-            updateProgress(40);
-
-            const transformations = {
-                'liverpool fc': {
-                    'indentation': 'Liverpool\'s defensive line discipline',
-                    'function': 'Klopp\'s tactical plays',
-                    'loop': 'Liverpool\'s passing sequences',
-                    'variable': 'player positions',
-                    'error': 'VAR decisions',
-                    'debugging': 'tactical analysis',
-                    'algorithm': 'game strategy',
-                    'data structure': 'team formation',
-                    'class': 'team squad',
-                    'object': 'individual player',
-                    'method': 'playing style'
-                },
-                'cooking': {
-                    'indentation': 'recipe step organization',
-                    'function': 'cooking techniques',
-                    'loop': 'repetitive preparation steps',
-                    'variable': 'ingredients',
-                    'error': 'burnt dishes',
-                    'debugging': 'taste testing',
-                    'algorithm': 'recipe instructions',
-                    'data structure': 'ingredient lists',
-                    'class': 'dish category',
-                    'object': 'individual dish',
-                    'method': 'cooking technique'
-                },
-                'basketball': {
-                    'indentation': 'court positioning',
-                    'function': 'basketball plays',
-                    'loop': 'practice drills',
-                    'variable': 'player stats',
-                    'error': 'fouls and violations',
-                    'debugging': 'game film review',
-                    'algorithm': 'play execution',
-                    'data structure': 'team roster',
-                    'class': 'position group',
-                    'object': 'individual player',
-                    'method': 'playing technique'
-                }
-            };
-
-            updateProgress(60);
-
-            // Apply transformations with enhanced analogies
-            interestList.forEach(interest => {
-                if (transformations[interest]) {
-                    const transforms = transformations[interest];
-                    Object.keys(transforms).forEach(key => {
-                        const regex = new RegExp(`\\b${key}\\b(?![^(]*\\))`, 'gi');
-                        personalizedContent = personalizedContent.replace(regex, 
-                            `${key} (like ${transforms[key]})`);
-                    });
-                }
-            });
-
-            updateProgress(80);
-
-            // Add personalized sections based on learning style
-            let styleAddition = '';
-            switch(learningStyle) {
-                case 'analogies':
-                    styleAddition = '\n\n## 🔗 Key Analogies\n\nThink of programming concepts like familiar activities from your interests. Each concept connects to something you already understand!';
-                    break;
-                case 'visual':
-                    styleAddition = '\n\n## 👀 Visual Learning Tips\n\nTry sketching out these concepts or creating diagrams that relate to your interests. Visual patterns help reinforce learning!';
-                    break;
-                case 'practical':
-                    styleAddition = '\n\n## 🛠️ Hands-On Exercises\n\nBest way to learn is by doing! Try implementing these concepts with examples from your favorite topics.';
-                    break;
-                case 'storytelling':
-                    styleAddition = '\n\n## 📖 Story-Based Learning\n\nImagine these programming concepts as characters and plot elements in stories about your interests. Each function is like a character with a specific role!';
-                    break;
+            if (!data.choices || !data.choices[0]) {
+                throw new Error('No response generated from API');
             }
 
-            personalizedContent += styleAddition;
-
-            // Add personalized introduction
-            const intro = `# 🎯 Your Personalized Learning Content\n\n*This content has been customized for someone interested in: ${interests}*\n*Learning style: ${learningStyle}*\n\n---\n\n`;
-            
             updateProgress(100);
-            
-            await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause to show completion
-            
-            return intro + personalizedContent;
+
+            // Add a personalized header
+            const personalizedHeader = `# 🎯 Your Personalized Learning Content
+
+*This content has been customized for someone interested in: ${interests}*
+*Learning style: ${learningStyle.replace('_', ' ')}*
+*Generated with AI on ${new Date().toLocaleDateString()}*
+
+---
+
+`;
+
+            return personalizedHeader + data.choices[0].message.content;
         }
 
         // UI helper functions
@@ -653,6 +747,7 @@
             document.getElementById('loading').style.display = 'block';
             document.getElementById('progressBar').style.display = 'block';
             document.getElementById('generateBtn').disabled = true;
+            document.getElementById('loadingText').textContent = 'Personalizing your content with AI...';
             updateProgress(0);
         }
 
@@ -685,57 +780,25 @@
 
         // Download functionality
         function downloadContent() {
+            if (!personalizedContent) {
+                showError('No content to download');
+                return;
+            }
+
             const blob = new Blob([personalizedContent], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'personalized_content.md';
+            a.download = `personalized_learning_${new Date().toISOString().split('T')[0]}.md`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
 
-        // Drag and drop functionality
-        const fileUpload = document.querySelector('.file-upload');
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            fileUpload.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            fileUpload.addEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            fileUpload.addEventListener(eventName, unhighlight, false);
-        });
-
-        function highlight(e) {
-            fileUpload.style.borderColor = '#9b59b6';
-            fileUpload.style.background = 'linear-gradient(45deg, rgba(76, 99, 210, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%)';
-        }
-
-        function unhighlight(e) {
-            fileUpload.style.borderColor = '#4c63d2';
-            fileUpload.style.background = 'linear-gradient(45deg, transparent 0%, rgba(76, 99, 210, 0.05) 100%)';
-        }
-
-        fileUpload.addEventListener('drop', handleDrop, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            
-            if (files.length > 0) {
-                document.getElementById('fileInput').files = files;
-                document.getElementById('fileInput').dispatchEvent(new Event('change'));
-            }
+        // Initialize PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         }
     </script>
 </body>
