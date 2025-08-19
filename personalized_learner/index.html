@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personalized Learning Content Generator</title>
+    <title>Smart Learning Personalizer</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -38,37 +38,48 @@
         }
 
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 10px;
             font-weight: 300;
         }
 
         .header p {
-            font-size: 1.1em;
+            font-size: 1.2em;
             opacity: 0.9;
         }
 
         .api-config {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 15px;
+            background: linear-gradient(135deg, #fff3cd, #f8f9fa);
+            border: 2px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 20px;
             margin: 20px;
             text-align: left;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .api-config h3 {
             color: #856404;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .api-key-input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
             font-family: monospace;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .api-key-input:focus {
+            border-color: #4c63d2;
+            outline: none;
         }
 
         .main-content {
@@ -93,10 +104,13 @@
         }
 
         .section-title {
-            font-size: 1.4em;
+            font-size: 1.5em;
             color: #4c63d2;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .form-group {
@@ -106,7 +120,7 @@
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-weight: 600;
             color: #555;
         }
 
@@ -124,6 +138,12 @@
             outline: none;
             border-color: #4c63d2;
             box-shadow: 0 0 0 3px rgba(76, 99, 210, 0.1);
+        }
+
+        .interest-input-enhanced {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            border: 2px solid #4c63d2;
+            position: relative;
         }
 
         .file-upload-wrapper {
@@ -146,6 +166,7 @@
         .file-upload:hover {
             border-color: #9b59b6;
             background: linear-gradient(45deg, rgba(76, 99, 210, 0.05) 0%, rgba(155, 89, 182, 0.05) 100%);
+            transform: scale(1.01);
         }
 
         .file-upload.dragover {
@@ -165,22 +186,22 @@
         }
 
         .upload-icon {
-            font-size: 2em;
+            font-size: 2.5em;
             color: #4c63d2;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         textarea {
-            min-height: 150px;
+            min-height: 180px;
             resize: vertical;
         }
 
         .btn {
             background: linear-gradient(135deg, #4c63d2 0%, #9b59b6 100%);
             color: white;
-            padding: 15px 30px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -188,15 +209,32 @@
             width: 100%;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(76, 99, 210, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(76, 99, 210, 0.4);
         }
 
         .btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
         }
 
         .btn:disabled {
@@ -208,17 +246,20 @@
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 25px;
+            background: rgba(76, 99, 210, 0.05);
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border: 4px solid #e1e5f2;
             border-top: 4px solid #4c63d2;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            margin: 0 auto 15px;
         }
 
         @keyframes spin {
@@ -228,65 +269,71 @@
 
         .output-content {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            min-height: 200px;
-            border: 1px solid #e1e5f2;
+            border-radius: 12px;
+            padding: 25px;
+            min-height: 300px;
+            border: 2px solid #e1e5f2;
             white-space: pre-wrap;
             overflow-y: auto;
-            max-height: 500px;
+            max-height: 600px;
             font-family: inherit;
-            line-height: 1.6;
+            line-height: 1.8;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .sample-interests {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 15px;
         }
 
         .interest-tag {
             background: linear-gradient(135deg, #4c63d2 0%, #9b59b6 100%);
             color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .interest-tag:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(76, 99, 210, 0.3);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(76, 99, 210, 0.4);
         }
 
         .download-btn {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            margin-top: 15px;
+            margin-top: 20px;
             display: none;
         }
 
         .download-btn:hover {
-            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 12px 30px rgba(40, 167, 69, 0.4);
+        }
+
+        .error-message, .success-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-weight: 500;
         }
 
         .error-message {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da, #f5c2c7);
             color: #721c24;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            display: none;
+            border: 1px solid #f1aeb5;
         }
 
         .success-message {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
             color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            display: none;
+            border: 1px solid #badbcc;
         }
 
         @media (max-width: 768px) {
@@ -296,30 +343,38 @@
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
+            }
+
+            .container {
+                margin: 10px;
             }
         }
 
         .file-name {
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
             color: #666;
             font-style: italic;
+            padding: 10px;
+            background: rgba(76, 99, 210, 0.05);
+            border-radius: 8px;
         }
 
         .config-toggle {
             cursor: pointer;
             color: #4c63d2;
             text-decoration: underline;
+            font-weight: 600;
         }
 
         .progress-bar {
             width: 100%;
-            height: 4px;
+            height: 6px;
             background: #e1e5f2;
-            border-radius: 2px;
+            border-radius: 3px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 15px 0;
             display: none;
         }
 
@@ -327,43 +382,64 @@
             height: 100%;
             background: linear-gradient(135deg, #4c63d2 0%, #9b59b6 100%);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
 
         .api-status {
-            margin-top: 10px;
-            padding: 8px;
-            border-radius: 5px;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
             font-size: 14px;
             display: none;
+            font-weight: 500;
         }
 
         .api-status.success {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border: 1px solid #badbcc;
         }
 
         .api-status.error {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da, #f5c2c7);
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border: 1px solid #f1aeb5;
+        }
+
+        .enhancement-preview {
+            background: rgba(76, 99, 210, 0.05);
+            border-left: 4px solid #4c63d2;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .learning-style-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(155, 89, 182, 0.05);
+            border-radius: 6px;
+            font-size: 13px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 Personalized Learning Generator</h1>
-            <p>Transform any educational content into personalized learning experiences using AI</p>
+            <h1>🧠 Smart Learning Personalizer</h1>
+            <p>Transform educational content with AI-powered personalization using your interests</p>
             
             <div class="api-config">
                 <h3>🔧 OpenAI Configuration</h3>
-                <p><span class="config-toggle" onclick="toggleApiConfig()">Click to configure OpenAI API (required)</span></p>
+                <p><span class="config-toggle" onclick="toggleApiConfig()">Click to configure OpenAI API (required for AI processing)</span></p>
                 <div id="apiConfigDetails" style="display: none; margin-top: 15px;">
                     <input type="password" id="openaiApiKey" class="api-key-input" placeholder="Enter your OpenAI API Key (sk-...)">
                     <select id="aiModel">
-                        <option value="gpt-4">GPT-4 (Recommended)</option>
+                        <option value="gpt-4o">GPT-4o (Best Quality)</option>
+                        <option value="gpt-4">GPT-4 (High Quality)</option>
                         <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster/Cheaper)</option>
                     </select>
                     <button class="btn" style="margin-top: 10px; text-transform: none;" onclick="testApiConnection()">Test API Connection</button>
@@ -374,54 +450,61 @@
         
         <div class="main-content">
             <div class="upload-section">
-                <h2 class="section-title">📚 Upload & Customize</h2>
+                <h2 class="section-title">📚 Content & Preferences</h2>
                 
                 <div class="form-group">
-                    <label for="interests">Your Interests/Hobbies:</label>
-                    <input type="text" id="interests" placeholder="e.g., Liverpool FC, cooking, basketball, music production" />
+                    <label for="interests">🎯 Your Interests & Hobbies (Be Specific!):</label>
+                    <input type="text" id="interests" class="interest-input-enhanced" placeholder="e.g., Liverpool FC tactics, Italian cooking, NBA analytics, guitar fingerpicking, chess openings" />
+                    <div class="enhancement-preview">
+                        💡 <strong>Tip:</strong> Be specific! Instead of "music", try "jazz piano" or "electronic music production". The more specific your interests, the better the AI can create relevant analogies.
+                    </div>
                     <div class="sample-interests">
-                        <span class="interest-tag" onclick="addInterest('Liverpool FC')">⚽ Liverpool FC</span>
-                        <span class="interest-tag" onclick="addInterest('cooking')">👨‍🍳 Cooking</span>
-                        <span class="interest-tag" onclick="addInterest('basketball')">🏀 Basketball</span>
-                        <span class="interest-tag" onclick="addInterest('gaming')">🎮 Gaming</span>
-                        <span class="interest-tag" onclick="addInterest('music')">🎵 Music</span>
-                        <span class="interest-tag" onclick="addInterest('photography')">📸 Photography</span>
+                        <span class="interest-tag" onclick="addInterest('Liverpool FC tactics')">⚽ Liverpool FC tactics</span>
+                        <span class="interest-tag" onclick="addInterest('Italian cooking')">🍝 Italian cooking</span>
+                        <span class="interest-tag" onclick="addInterest('NBA analytics')">🏀 NBA analytics</span>
+                        <span class="interest-tag" onclick="addInterest('chess strategy')">♟️ Chess strategy</span>
+                        <span class="interest-tag" onclick="addInterest('electronic music production')">🎵 Music production</span>
+                        <span class="interest-tag" onclick="addInterest('landscape photography')">📸 Photography</span>
+                        <span class="interest-tag" onclick="addInterest('rock climbing')">🧗 Rock climbing</span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="learningStyle">Learning Style:</label>
+                    <label for="learningStyle">🎨 Learning Approach:</label>
                     <select id="learningStyle">
-                        <option value="analogies">Analogies & Examples from my interests</option>
-                        <option value="visual">Visual learning with diagrams</option>
-                        <option value="practical">Hands-on practical examples</option>
-                        <option value="storytelling">Story-based explanations</option>
-                        <option value="technical">Technical deep-dive</option>
+                        <option value="analogies_rich">Rich Analogies & Examples (Recommended)</option>
+                        <option value="storytelling">Story-based Explanations</option>
+                        <option value="practical_projects">Hands-on Project Examples</option>
+                        <option value="visual_metaphors">Visual Metaphors & Diagrams</option>
+                        <option value="step_by_step">Step-by-step with Interest Examples</option>
                     </select>
+                    <div class="learning-style-preview" id="stylePreview">
+                        This approach will weave analogies from your interests throughout the content, making complex concepts easier to understand and remember.
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Upload Educational Content:</label>
+                    <label>📄 Upload Educational Content:</label>
                     <div class="file-upload-wrapper">
                         <div class="file-upload" id="fileUploadArea">
-                            <div class="upload-icon">📄</div>
-                            <div>Click to upload or drag & drop</div>
-                            <div style="font-size: 14px; color: #666; margin-top: 5px;">
-                                Supports: .txt, .md, .pdf files
+                            <div class="upload-icon">📁</div>
+                            <div><strong>Click to upload or drag & drop</strong></div>
+                            <div style="font-size: 14px; color: #666; margin-top: 8px;">
+                                Supports: PDF, TXT, MD, HTML files (up to 20MB)
                             </div>
-                            <input type="file" class="file-upload-input" id="fileInput" accept=".txt,.md,.pdf" />
+                            <input type="file" class="file-upload-input" id="fileInput" accept=".txt,.md,.pdf,.html" />
                         </div>
                         <div class="file-name" id="fileName"></div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="textContent">Or paste text content:</label>
-                    <textarea id="textContent" placeholder="Paste your educational content here..."></textarea>
+                    <label for="textContent">📝 Or paste text content:</label>
+                    <textarea id="textContent" placeholder="Paste your educational content here (course notes, articles, tutorials, etc.)..."></textarea>
                 </div>
 
                 <button class="btn" id="generateBtn" onclick="generatePersonalizedContent()">
-                    ✨ Generate Personalized Content
+                    ✨ Personalize with AI
                 </button>
 
                 <div class="progress-bar" id="progressBar">
@@ -430,7 +513,7 @@
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <div id="loadingText">Personalizing your content with AI...</div>
+                    <div id="loadingText">AI is analyzing your interests and personalizing content...</div>
                 </div>
 
                 <div class="error-message" id="errorMessage"></div>
@@ -438,20 +521,27 @@
             </div>
 
             <div class="output-section">
-                <h2 class="section-title">🎨 Personalized Output</h2>
+                <h2 class="section-title">🎨 Your Personalized Content</h2>
                 <div class="output-content" id="output">
-                    Your personalized content will appear here...
+                    Your AI-personalized content will appear here...
                     
                     <br><br>
-                    <strong>How it works:</strong>
-                    <br>1. Enter your interests/hobbies
-                    <br>2. Choose your learning style
-                    <br>3. Upload a file or paste content
-                    <br>4. Configure OpenAI API key
-                    <br>5. Click generate!
+                    <strong>🚀 How it works:</strong>
+                    <br>1. Enter your specific interests (the more detailed, the better!)
+                    <br>2. Choose your preferred learning approach
+                    <br>3. Upload educational content or paste text
+                    <br>4. Configure your OpenAI API key
+                    <br>5. Let AI work its magic!
                     
                     <br><br>
-                    The AI will add relevant analogies and examples from your interests throughout the content.
+                    <strong>🎯 What you'll get:</strong>
+                    <br>• Rich analogies connecting concepts to your interests
+                    <br>• Practical examples using familiar scenarios
+                    <br>• Enhanced explanations that make complex topics click
+                    <br>• The same educational value, but tailored for YOU
+                    
+                    <br><br>
+                    <em>Example: Learning about databases? If you're into football, you'll see analogies about team formations, player statistics, and match strategies!</em>
                 </div>
                 <button class="btn download-btn" id="downloadBtn" onclick="downloadContent()">
                     💾 Download Personalized Content
@@ -467,6 +557,20 @@
         let originalContent = '';
         let personalizedContent = '';
         let isApiConfigured = false;
+
+        // Learning style previews
+        const styleDescriptions = {
+            'analogies_rich': 'This approach will weave rich analogies from your interests throughout the content, making complex concepts easier to understand and remember.',
+            'storytelling': 'Content will be presented as engaging stories using characters and scenarios from your interests.',
+            'practical_projects': 'Concepts will be explained through hands-on project examples related to your hobbies and interests.',
+            'visual_metaphors': 'Visual metaphors and diagrams will be suggested using familiar concepts from your interests.',
+            'step_by_step': 'Step-by-step explanations with real examples from your interest areas at each stage.'
+        };
+
+        // Update learning style preview
+        document.getElementById('learningStyle').addEventListener('change', function() {
+            document.getElementById('stylePreview').textContent = styleDescriptions[this.value];
+        });
 
         // Configuration functions
         function toggleApiConfig() {
@@ -503,7 +607,7 @@
 
                 if (response.ok) {
                     isApiConfigured = true;
-                    showApiStatus('✅ API connection successful!', 'success');
+                    showApiStatus('✅ API connection successful! Ready to personalize content.', 'success');
                 } else {
                     const error = await response.json();
                     showApiStatus(`❌ API Error: ${error.error?.message || 'Invalid API key'}`, 'error');
@@ -520,7 +624,7 @@
             statusDiv.className = `api-status ${type}`;
         }
 
-        // File handling functions
+        // Enhanced file handling
         async function extractTextFromPDF(file) {
             return new Promise((resolve, reject) => {
                 const fileReader = new FileReader();
@@ -547,21 +651,46 @@
             });
         }
 
+        async function extractTextFromHTML(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(e.target.result, 'text/html');
+                        
+                        // Remove script and style elements
+                        const scripts = doc.querySelectorAll('script, style');
+                        scripts.forEach(el => el.remove());
+                        
+                        // Get text content
+                        const text = doc.body ? doc.body.textContent : doc.textContent;
+                        resolve(text.trim());
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = () => reject(new Error('Failed to read HTML file'));
+                reader.readAsText(file);
+            });
+        }
+
         // Handle file upload
         document.getElementById('fileInput').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            document.getElementById('fileName').textContent = `Selected: ${file.name}`;
+            document.getElementById('fileName').textContent = `Processing: ${file.name}...`;
             
             try {
                 let content = '';
                 
                 if (file.type === 'application/pdf') {
-                    document.getElementById('fileName').textContent += ' (Extracting text...)';
                     content = await extractTextFromPDF(file);
+                } else if (file.type === 'text/html' || file.name.endsWith('.html')) {
+                    content = await extractTextFromHTML(file);
                 } else {
-                    // Text files
+                    // Text files (txt, md, etc.)
                     content = await new Promise((resolve, reject) => {
                         const reader = new FileReader();
                         reader.onload = e => resolve(e.target.result);
@@ -572,7 +701,11 @@
                 
                 originalContent = content;
                 document.getElementById('textContent').value = content;
-                document.getElementById('fileName').textContent = `✅ Loaded: ${file.name} (${content.length} characters)`;
+                document.getElementById('fileName').innerHTML = `
+                    ✅ <strong>Loaded:</strong> ${file.name}<br>
+                    📊 <strong>Size:</strong> ${(content.length / 1000).toFixed(1)}k characters<br>
+                    📄 <strong>Words:</strong> ~${Math.round(content.split(/\s+/).length)} words
+                `;
                 
             } catch (error) {
                 showError(`Failed to process file: ${error.message}`);
@@ -624,182 +757,47 @@
             }
         }
 
-        // Generate personalized content with OpenAI
-        async function generatePersonalizedContent() {
-            const interests = document.getElementById('interests').value.trim();
-            const learningStyle = document.getElementById('learningStyle').value;
-            const textContent = document.getElementById('textContent').value.trim();
-            const apiKey = document.getElementById('openaiApiKey').value.trim();
+        // Enhanced AI prompt generation
+        function createPersonalizationPrompt(content, interests, learningStyle) {
+            const styleInstructions = {
+                'analogies_rich': `Create rich, detailed analogies using ${interests}. For every major concept, provide at least one relevant analogy. Make connections explicit and memorable.`,
+                'storytelling': `Transform explanations into engaging stories featuring characters, scenarios, or situations from ${interests}. Create narrative flow.`,
+                'practical_projects': `Design hands-on examples and mini-projects related to ${interests} that demonstrate each concept practically.`,
+                'visual_metaphors': `Suggest visual representations and mental models using familiar concepts from ${interests}. Describe what learners should visualize.`,
+                'step_by_step': `Break down each concept into clear steps, with examples from ${interests} at each stage to reinforce understanding.`
+            };
 
-            // Validation
-            if (!interests) {
-                showError('Please enter your interests or hobbies!');
-                return;
-            }
+            return `You are an expert educational content personalizer and learning specialist. Transform the given educational content into a highly personalized version that connects deeply with the learner's interests.
 
-            if (!textContent) {
-                showError('Please upload a file or paste some content!');
-                return;
-            }
+LEARNER PROFILE:
+- Primary interests: ${interests}
+- Preferred learning style: ${learningStyle}
 
-            if (!apiKey) {
-                showError('Please configure your OpenAI API key first!');
-                return;
-            }
+PERSONALIZATION INSTRUCTIONS:
+1. ${styleInstructions[learningStyle]}
 
-            if (textContent.length > 15000) {
-                showError('Content is too long. Please use content under 15,000 characters for better results.');
-                return;
-            }
+2. CONTENT ENHANCEMENT RULES:
+   - Keep ALL original educational content and concepts
+   - Add 2-3 relevant analogies per major section using the learner's interests
+   - Insert specific examples that connect to ${interests}
+   - Use terminology and scenarios familiar from their interests
+   - Make abstract concepts concrete through their interest lens
+   - Add "connection bridges" that link new concepts to known interests
 
-            // Show loading
-            showLoading();
-            hideMessages();
+3. STRUCTURE REQUIREMENTS:
+   - Maintain original learning objectives
+   - Add personalized examples within existing sections
+   - Use interest-based metaphors for complex explanations
+   - Include real-world applications related to their interests
+   - Add summary boxes connecting key points to their interests
 
-            try {
-                personalizedContent = await personalizeWithOpenAI(textContent, interests, learningStyle, apiKey);
-                document.getElementById('output').textContent = personalizedContent;
-                document.getElementById('downloadBtn').style.display = 'block';
-                showSuccess('Content personalized successfully! 🎉');
-                
-            } catch (error) {
-                showError('Error generating content: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
+4. ENGAGEMENT ELEMENTS:
+   - Start sections with relatable scenarios from their interests
+   - Use their interests' vocabulary when appropriate
+   - Create memorable phrases that bridge concepts with interests
+   - Add practical "try this" suggestions using their interests
 
-        // OpenAI API integration
-        async function personalizeWithOpenAI(content, interests, learningStyle, apiKey) {
-            const model = document.getElementById('aiModel').value;
-
-            const prompt = `You are an expert educational content personalizer. Your task is to transform the given educational content by adding relevant analogies, examples, and explanations that connect to the learner's specific interests.
-
-INSTRUCTIONS:
-1. Keep ALL original technical content, concepts, and information intact
-2. Add personalized analogies and examples from these interests: ${interests}
-3. Use ${learningStyle} learning approach
-4. Insert relevant connections throughout the content, not just at the end
-5. Make the content more engaging while preserving educational value
-6. Don't remove any important information - only enhance and personalize
-
-For each major concept or section, try to include a relevant analogy or example from the learner's interests: ${interests}
-
-Learning style to use: ${learningStyle}
-
-Original content to personalize:
-
+ORIGINAL CONTENT TO PERSONALIZE:
 ${content}
 
-Please return the enhanced, personalized version:`;
-
-            updateProgress(20);
-
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: model,
-                    messages: [{ 
-                        role: 'user', 
-                        content: prompt 
-                    }],
-                    max_tokens: 4000,
-                    temperature: 0.7
-                })
-            });
-
-            updateProgress(60);
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API request failed (${response.status})`);
-            }
-
-            const data = await response.json();
-            updateProgress(90);
-
-            if (!data.choices || !data.choices[0]) {
-                throw new Error('No response generated from API');
-            }
-
-            updateProgress(100);
-
-            // Add a personalized header
-            const personalizedHeader = `# 🎯 Your Personalized Learning Content
-
-*This content has been customized for someone interested in: ${interests}*
-*Learning style: ${learningStyle.replace('_', ' ')}*
-*Generated with AI on ${new Date().toLocaleDateString()}*
-
----
-
-`;
-
-            return personalizedHeader + data.choices[0].message.content;
-        }
-
-        // UI helper functions
-        function showLoading() {
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('progressBar').style.display = 'block';
-            document.getElementById('generateBtn').disabled = true;
-            document.getElementById('loadingText').textContent = 'Personalizing your content with AI...';
-            updateProgress(0);
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('progressBar').style.display = 'none';
-            document.getElementById('generateBtn').disabled = false;
-        }
-
-        function updateProgress(percent) {
-            document.getElementById('progressFill').style.width = percent + '%';
-        }
-
-        function showError(message) {
-            const errorEl = document.getElementById('errorMessage');
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
-
-        function showSuccess(message) {
-            const successEl = document.getElementById('successMessage');
-            successEl.textContent = message;
-            successEl.style.display = 'block';
-        }
-
-        function hideMessages() {
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
-        }
-
-        // Download functionality
-        function downloadContent() {
-            if (!personalizedContent) {
-                showError('No content to download');
-                return;
-            }
-
-            const blob = new Blob([personalizedContent], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `personalized_learning_${new Date().toISOString().split('T')[0]}.md`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // Initialize PDF.js
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        }
-    </script>
-</body>
-</html>
+Create a comprehensive personalized version
