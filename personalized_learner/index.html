@@ -800,4 +800,303 @@ PERSONALIZATION INSTRUCTIONS:
 ORIGINAL CONTENT TO PERSONALIZE:
 ${content}
 
-Create a comprehensive personalized version
+Create a comprehensive personalized version that makes learning engaging and memorable through their interests.`;
+        }
+
+        // Enhanced content generation with better AI prompting
+        async function generatePersonalizedContent() {
+            const interests = document.getElementById('interests').value.trim();
+            const learningStyle = document.getElementById('learningStyle').value;
+            const textContent = document.getElementById('textContent').value.trim();
+            const apiKey = document.getElementById('openaiApiKey').value.trim();
+
+            // Enhanced validation
+            if (!interests) {
+                showError('Please enter your specific interests! The more detailed, the better the personalization.');
+                return;
+            }
+
+            if (interests.split(',').length < 2 && interests.length < 20) {
+                showError('Please add more specific interests for better personalization. Try being more detailed or adding multiple interests.');
+                return;
+            }
+
+            if (!textContent) {
+                showError('Please upload a file or paste some educational content to personalize!');
+                return;
+            }
+
+            if (!apiKey) {
+                showError('Please configure your OpenAI API key first!');
+                document.getElementById('apiConfigDetails').style.display = 'block';
+                return;
+            }
+
+            if (textContent.length > 25000) {
+                showError('Content is too long. Please use content under 25,000 characters for optimal results.');
+                return;
+            }
+
+            if (textContent.length < 100) {
+                showError('Content seems too short for meaningful personalization. Please provide more substantial content.');
+                return;
+            }
+
+            // Show enhanced loading
+            showLoading();
+            hideMessages();
+
+            try {
+                personalizedContent = await personalizeWithOpenAI(textContent, interests, learningStyle, apiKey);
+                document.getElementById('output').innerHTML = formatOutput(personalizedContent);
+                document.getElementById('downloadBtn').style.display = 'block';
+                showSuccess('🎉 Content successfully personalized! Check out your customized learning material.');
+                
+            } catch (error) {
+                showError('Error generating content: ' + error.message);
+                console.error('Generation error:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Enhanced OpenAI API integration with better prompting
+        async function personalizeWithOpenAI(content, interests, learningStyle, apiKey) {
+            const model = document.getElementById('aiModel').value;
+            const prompt = createPersonalizationPrompt(content, interests, learningStyle);
+
+            updateProgress(15);
+            document.getElementById('loadingText').textContent = 'Analyzing your interests and learning style...';
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [{ 
+                        role: 'user', 
+                        content: prompt 
+                    }],
+                    max_tokens: 4000,
+                    temperature: 0.7,
+                    presence_penalty: 0.1,
+                    frequency_penalty: 0.1
+                })
+            });
+
+            updateProgress(50);
+            document.getElementById('loadingText').textContent = 'AI is creating personalized analogies and examples...';
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || `API request failed (${response.status})`);
+            }
+
+            const data = await response.json();
+            updateProgress(80);
+            document.getElementById('loadingText').textContent = 'Finalizing your personalized content...';
+
+            if (!data.choices || !data.choices[0]) {
+                throw new Error('No response generated from API');
+            }
+
+            updateProgress(100);
+
+            // Add a personalized header
+            const personalizedHeader = `# 🎯 Your Personalized Learning Content
+
+*This content has been customized for someone interested in: ${interests}*
+*Learning style: ${learningStyle.replace(/_/g, ' ')}*
+*Generated with AI on ${new Date().toLocaleDateString()}*
+
+---
+
+`;
+
+            return personalizedHeader + data.choices[0].message.content;
+        }
+
+        // Format output for better display
+        function formatOutput(content) {
+            // Convert markdown-style formatting to HTML
+            let formatted = content
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^# (.*$)/gm, '<h1 style="color: #4c63d2; margin: 20px 0 10px 0;">$1</h1>')
+                .replace(/^## (.*$)/gm, '<h2 style="color: #9b59b6; margin: 15px 0 8px 0;">$1</h2>')
+                .replace(/^### (.*$)/gm, '<h3 style="color: #6c757d; margin: 12px 0 6px 0;">$1</h3>');
+            
+            return formatted;
+        }
+
+        // UI helper functions
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('progressBar').style.display = 'block';
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('loadingText').textContent = 'Personalizing your content with AI...';
+            updateProgress(0);
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('generateBtn').disabled = false;
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const successEl = document.getElementById('successMessage');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Download functionality
+        function downloadContent() {
+            if (!personalizedContent) {
+                showError('No content to download');
+                return;
+            }
+
+            const blob = new Blob([personalizedContent], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `personalized_learning_${new Date().toISOString().split('T')[0]}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showSuccess('📥 Content downloaded successfully!');
+        }
+
+        // Initialize PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Smart Learning Personalizer loaded successfully!');
+        });
+    </script>
+</body>
+</html> that makes learning engaging and memorable through their interests.`;
+        }
+
+        // Enhanced content generation with better AI prompting
+        async function generatePersonalizedContent() {
+            const interests = document.getElementById('interests').value.trim();
+            const learningStyle = document.getElementById('learningStyle').value;
+            const textContent = document.getElementById('textContent').value.trim();
+            const apiKey = document.getElementById('openaiApiKey').value.trim();
+
+            // Enhanced validation
+            if (!interests) {
+                showError('Please enter your specific interests! The more detailed, the better the personalization.');
+                return;
+            }
+
+            if (interests.split(',').length < 2 && interests.length < 20) {
+                showError('Please add more specific interests for better personalization. Try being more detailed or adding multiple interests.');
+                return;
+            }
+
+            if (!textContent) {
+                showError('Please upload a file or paste some educational content to personalize!');
+                return;
+            }
+
+            if (!apiKey) {
+                showError('Please configure your OpenAI API key first!');
+                document.getElementById('apiConfigDetails').style.display = 'block';
+                return;
+            }
+
+            if (textContent.length > 25000) {
+                showError('Content is too long. Please use content under 25,000 characters for optimal results.');
+                return;
+            }
+
+            if (textContent.length < 100) {
+                showError('Content seems too short for meaningful personalization. Please provide more substantial content.');
+                return;
+            }
+
+            // Show enhanced loading
+            showLoading();
+            hideMessages();
+
+            try {
+                personalizedContent = await personalizeWithOpenAI(textContent, interests, learningStyle, apiKey);
+                document.getElementById('output').innerHTML = personalizedContent.replace(/\n/g, '<br>');
+                document.getElementById('downloadBtn').style.display = 'block';
+                showSuccess('🎉 Content successfully personalized! Check out your customized learning material.');
+                
+            } catch (error) {
+                showError('Error generating content: ' + error.message);
+                console.error('Generation error:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Enhanced OpenAI API integration with better prompting
+        async function personalizeWithOpenAI(content, interests, learningStyle, apiKey) {
+            const model = document.getElementById('aiModel').value;
+            const prompt = createPersonalizationPrompt(content, interests, learningStyle);
+
+            updateProgress(15);
+            document.getElementById('loadingText').textContent = 'Analyzing your interests and learning style...';
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [{ 
+                        role: 'user', 
+                        content: prompt 
+                    }],
+                    max_tokens: 4000,
+                    temperature: 0.7,
+                    presence_penalty: 0.1,
+                    frequency_penalty: 0.1
+                })
+            });
+
+            updateProgress(50);
+            document.getElementById('loadingText').textContent = 'AI is creating personalized analogies and examples...';
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || `API request failed (${response.status})`);
+            }
+
+            const data = await response.json();
+            updateProgress(80);
+            document.getElementById('loadingText').textContent = 'Finalizing your personalized content...';
+
+            if
