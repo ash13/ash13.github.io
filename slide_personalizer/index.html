@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -318,17 +320,17 @@
     <div class="container">
         <div class="header">
             <h1>🎓 Personalized AI Learning Platform</h1>
-            <p>Transform your lecture slides with Claude AI personalization</p>
+            <p>Transform your lecture slides with ChatGPT personalization</p>
         </div>
 
         <div class="main-content">
             <!-- API Setup -->
             <div class="api-setup">
-                <h3>🔑 Claude API Configuration</h3>
-                <input type="password" id="apiKey" placeholder="Enter your Claude API key (sk-ant-...)">
+                <h3>🔑 OpenAI API Configuration</h3>
+                <input type="password" id="apiKey" placeholder="Enter your OpenAI API key (sk-...)">
                 <div class="help-text">
-                    Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a>. 
-                    Your key is stored locally and never sent to our servers.
+                    Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>. 
+                    Your key is stored locally and sent directly to OpenAI.
                 </div>
             </div>
 
@@ -412,7 +414,7 @@
             <!-- Generate Button -->
             <div class="step">
                 <button class="btn" id="generateBtn" onclick="generatePersonalizedContent()">
-                    🚀 Generate Personalized Content
+                    🚀 Generate Personalized Content with ChatGPT
                 </button>
             </div>
 
@@ -422,7 +424,9 @@
                 <div id="statusMessage"></div>
                 <div id="slidePreview"></div>
                 <div class="export-buttons">
-                    <button class="btn" onclick="exportToText()">📄 Export as Text</button>
+                    <button class="btn" onclick="exportToPowerPoint()">📊 Export to PowerPoint</button>
+                    <button class="btn" onclick="exportToPDF()">📄 Export to PDF</button>
+                    <button class="btn" onclick="exportToText()">📝 Export as Text</button>
                     <button class="btn" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
                 </div>
             </div>
@@ -568,38 +572,62 @@
             document.getElementById(id).addEventListener('change', updateProgress);
         });
 
-        // Generate personalized content with Claude API
+        // Generate personalized content with OpenAI API
         async function generatePersonalizedContent() {
+            console.log('🔄 Generate button clicked - starting validation...');
+            
             const apiKey = document.getElementById('apiKey').value.trim();
             const background = document.getElementById('background').value;
             const experience = document.getElementById('experience').value;
             const learningStyle = document.getElementById('learningStyle').value;
             const complexity = document.getElementById('complexity').value;
 
-            // Validation
+            console.log('📋 Form data:', {
+                apiKey: apiKey ? 'Present (length: ' + apiKey.length + ')' : 'Missing',
+                background,
+                experience,
+                learningStyle,
+                complexity,
+                extractedText: extractedText ? 'Present (length: ' + extractedText.length + ')' : 'Missing',
+                interests: interests.length
+            });
+
+            // Validation with detailed logging
             if (!apiKey) {
-                showStatus('Please enter your Claude API key.', 'error');
+                console.log('❌ Validation failed: Missing API key');
+                showStatus('Please enter your OpenAI API key.', 'error');
                 return;
             }
 
-            if (!uploadedFile || !extractedText) {
-                showStatus('Please upload and extract content from your slides first.', 'error');
+            if (!uploadedFile) {
+                console.log('❌ Validation failed: No file uploaded');
+                showStatus('Please upload your slides first.', 'error');
+                return;
+            }
+
+            if (!extractedText || extractedText.trim().length === 0) {
+                console.log('❌ Validation failed: No extracted text');
+                showStatus('No content was extracted from your file. Please try uploading again or use a different file format.', 'error');
                 return;
             }
 
             if (!background) {
+                console.log('❌ Validation failed: No background selected');
                 showStatus('Please select your background.', 'error');
                 return;
             }
 
+            console.log('✅ Validation passed - proceeding with API call...');
+
             const generateBtn = document.getElementById('generateBtn');
             generateBtn.disabled = true;
-            generateBtn.innerHTML = '<div class="loading-spinner"></div>Generating with Claude AI...';
+            generateBtn.innerHTML = '<div class="loading-spinner"></div>Generating with ChatGPT...';
 
             try {
-                showStatus('🤖 Claude is personalizing your content...', 'processing');
+                showStatus('🤖 ChatGPT is personalizing your content...', 'processing');
                 
-                const personalizedSlides = await callClaudeAPI(apiKey, {
+                console.log('📡 Calling OpenAI API...');
+                const personalizedSlides = await callOpenAIAPI(apiKey, {
                     originalContent: extractedText,
                     background,
                     experience,
@@ -608,22 +636,36 @@
                     interests
                 });
 
+                console.log('✅ API call successful, received slides:', personalizedSlides.length);
+                
                 personalizedContent = personalizedSlides;
                 displayPersonalizedContent();
                 showStatus('✅ Your personalized slides are ready!', 'success');
                 document.getElementById('outputSection').style.display = 'block';
 
             } catch (error) {
+                console.error('❌ Full error details:', error);
                 showStatus('❌ Error: ' + error.message, 'error');
-                console.error('Claude API Error:', error);
+                
+                // Additional error details for debugging
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showStatus('❌ Network error - please check your internet connection and API key.', 'error');
+                } else if (error.message.includes('401')) {
+                    showStatus('❌ Invalid API key - please check your OpenAI API key.', 'error');
+                } else if (error.message.includes('429')) {
+                    showStatus('❌ Rate limit exceeded - please wait and try again.', 'error');
+                }
             } finally {
                 generateBtn.disabled = false;
-                generateBtn.innerHTML = '🚀 Generate Personalized Content';
+                generateBtn.innerHTML = '🚀 Generate Personalized Content with ChatGPT';
             }
         }
 
-        // Call Claude API
-        async function callClaudeAPI(apiKey, userProfile) {
+        // Call OpenAI API with enhanced slide-by-slide processing
+        async function callOpenAIAPI(apiKey, userProfile) {
+            console.log('🌐 Making API call to OpenAI...');
+            console.log('📝 Content preview:', userProfile.originalContent.substring(0, 200) + '...');
+            
             const prompt = `You are an expert educational content personalizer. I have lecture slides content that needs to be personalized for a specific student.
 
 Student Profile:
@@ -636,66 +678,119 @@ Student Profile:
 Original Lecture Content:
 ${userProfile.originalContent}
 
-Please personalize this content by:
-1. Analyzing the original slides and identifying key topics
-2. Rewriting each slide's content to incorporate relevant examples from the student's background and interests
-3. Adjusting the complexity and explanation style based on their preferences
-4. Making concepts relatable through their personal interests
-5. Ensuring the core learning objectives remain intact
+CRITICAL INSTRUCTIONS for slide personalization:
+1. ANALYZE each individual slide in the original content (marked with "--- Slide X ---")
+2. For EVERY slide, you MUST:
+   - Identify the core concept/topic of that specific slide
+   - Rewrite the content with examples from the student's ${userProfile.background} background
+   - Incorporate at least one reference to their interests: ${userProfile.interests.join(', ')}
+   - Adjust complexity for ${userProfile.experience} level
+   - Match their ${userProfile.learningStyle} learning style
+3. PRESERVE the original slide structure and count
+4. Each slide should be significantly different from the original while maintaining the learning objective
+5. Use concrete, specific examples rather than generic ones
 
-Please format your response as a JSON array where each slide is an object with 'title' and 'content' fields. Make the content engaging and personalized while maintaining educational value.
+Please format your response as a JSON array where each slide is an object with 'title' and 'content' fields. 
 
-Example format:
+EXAMPLE of good personalization:
+Original: "Machine learning algorithms process data"
+Personalized for journalism student interested in football: "Machine learning algorithms process data just like how sports journalists analyze player statistics to predict match outcomes. For instance, when Liverpool FC's analysts process Salah's shot data to optimize his positioning, they're using the same pattern recognition principles we'll explore."
+
+Return EXACTLY this JSON format:
 [
   {
-    "title": "Introduction to [Topic]",
-    "content": "Personalized explanation that relates to the student's background and interests..."
+    "title": "Slide 1 Title (personalized)",
+    "content": "Detailed personalized explanation with specific examples from their background and interests..."
+  },
+  {
+    "title": "Slide 2 Title (personalized)", 
+    "content": "Another personalized explanation..."
   }
-]`;
+]
 
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': apiKey,
-                    'anthropic-version': '2023-06-01'
-                },
-                body: JSON.stringify({
-                    model: 'claude-3-sonnet-20240229',
-                    max_tokens: 4000,
-                    messages: [{
-                        role: 'user',
-                        content: prompt
-                    }]
-                })
-            });
+Ensure you create one JSON object for each slide found in the original content.`;
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API request failed: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const claudeResponse = data.content[0].text;
-
-            // Try to parse JSON response
             try {
-                const jsonMatch = claudeResponse.match(/\[[\s\S]*\]/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
-                } else {
-                    // Fallback: create slides from text response
+                console.log('📡 Sending request to OpenAI API...');
+                
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are an expert educational content personalizer. Always respond with valid JSON arrays for slide content.'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        max_tokens: 4000,
+                        temperature: 0.7
+                    })
+                });
+
+                console.log('📨 Response received, status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ API Error Response:', errorText);
+                    
+                    let errorMessage = `API request failed: ${response.status}`;
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.error?.message || errorMessage;
+                    } catch (e) {
+                        errorMessage = errorText || errorMessage;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                console.log('✅ API response parsed successfully');
+                
+                const gptResponse = data.choices[0].message.content;
+                console.log('📄 GPT response preview:', gptResponse.substring(0, 300) + '...');
+
+                // Try to parse JSON response
+                try {
+                    const jsonMatch = gptResponse.match(/\[[\s\S]*\]/);
+                    if (jsonMatch) {
+                        const parsedSlides = JSON.parse(jsonMatch[0]);
+                        console.log('✅ Successfully parsed', parsedSlides.length, 'slides');
+                        return parsedSlides;
+                    } else {
+                        console.log('⚠️ No JSON array found, creating fallback slide');
+                        return [{
+                            title: "Personalized Content",
+                            content: gptResponse
+                        }];
+                    }
+                } catch (parseError) {
+                    console.error('❌ JSON parse error:', parseError);
+                    console.log('⚠️ Using fallback: treating entire response as content');
                     return [{
-                        title: "Personalized Content",
-                        content: claudeResponse
+                        title: "Personalized Learning Content",
+                        content: gptResponse
                     }];
                 }
-            } catch (parseError) {
-                // Fallback: treat entire response as content
-                return [{
-                    title: "Personalized Learning Content",
-                    content: claudeResponse
-                }];
+                
+            } catch (networkError) {
+                console.error('❌ Network/API Error:', networkError);
+                
+                // Provide helpful error messages for common issues
+                if (networkError.message.includes('Failed to fetch')) {
+                    throw new Error('🚫 Network Error: Please check your internet connection and API key.');
+                }
+                
+                throw networkError;
             }
         }
 
@@ -711,250 +806,4 @@ Example format:
 
         function showStatus(message, type) {
             const statusDiv = document.getElementById('statusMessage');
-            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
-        }
-
-        function exportToPDF() {
-            if (!personalizedContent) return;
-            
-            showStatus('📄 Creating PDF presentation...', 'processing');
-            
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('landscape', 'mm', 'a4'); // Landscape for slide format
-                
-                // PDF dimensions (A4 landscape)
-                const pageWidth = 297;
-                const pageHeight = 210;
-                const margin = 20;
-                const contentWidth = pageWidth - (margin * 2);
-                const contentHeight = pageHeight - (margin * 2);
-                
-                // Get student profile info
-                const background = document.getElementById('background').value;
-                const experience = document.getElementById('experience').value;
-                const interests = document.getElementById('interestsTags').textContent.replace(/×/g, '').trim();
-                
-                // Title page
-                doc.setFillColor(79, 172, 254); // Blue background
-                doc.rect(0, 0, pageWidth, 50, 'F');
-                
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(24);
-                doc.setFont(undefined, 'bold');
-                doc.text('Personalized Learning Content', pageWidth/2, 30, { align: 'center' });
-                
-                doc.setTextColor(0, 0, 0);
-                doc.setFontSize(12);
-                doc.setFont(undefined, 'normal');
-                doc.text(`Background: ${background}`, margin, 80);
-                doc.text(`Experience Level: ${experience}`, margin, 95);
-                doc.text(`Interests: ${interests || 'General'}`, margin, 110);
-                doc.text(`Generated: ${new Date().toLocaleDateString()}`, margin, 125);
-                
-                // Add slides
-                personalizedContent.forEach((slideData, index) => {
-                    doc.addPage('landscape');
-                    
-                    // Slide header background
-                    doc.setFillColor(240, 248, 255); // Light blue
-                    doc.rect(0, 0, pageWidth, 40, 'F');
-                    
-                    // Slide number
-                    doc.setTextColor(79, 172, 254);
-                    doc.setFontSize(14);
-                    doc.setFont(undefined, 'bold');
-                    doc.text(`Slide ${index + 1}`, margin, 15);
-                    
-                    // Slide title
-                    doc.setTextColor(0, 0, 0);
-                    doc.setFontSize(16);
-                    doc.setFont(undefined, 'bold');
-                    const title = slideData.title;
-                    const titleLines = doc.splitTextToSize(title, contentWidth);
-                    doc.text(titleLines, margin, 30);
-                    
-                    // Slide content
-                    doc.setFontSize(11);
-                    doc.setFont(undefined, 'normal');
-                    const content = slideData.content;
-                    
-                    // Split content into paragraphs and format
-                    const paragraphs = content.split('\n').filter(p => p.trim());
-                    let yPosition = 60;
-                    
-                    paragraphs.forEach(paragraph => {
-                        if (yPosition > pageHeight - 30) return; // Prevent overflow
-                        
-                        const lines = doc.splitTextToSize(paragraph.trim(), contentWidth);
-                        doc.text(lines, margin, yPosition);
-                        yPosition += lines.length * 6 + 8; // Line spacing + paragraph spacing
-                    });
-                    
-                    // Add footer
-                    doc.setTextColor(150, 150, 150);
-                    doc.setFontSize(8);
-                    doc.text('Generated by Personalized AI Learning Platform', pageWidth/2, pageHeight - 10, { align: 'center' });
-                });
-                
-                // Save the PDF
-                const fileName = `personalized-slides-${new Date().toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
-                
-                showStatus('✅ PDF presentation downloaded successfully!', 'success');
-                
-            } catch (error) {
-                console.error('PDF export error:', error);
-                showStatus('❌ Error creating PDF: ' + error.message, 'error');
-            }
-        }
-
-        function exportToPowerPoint() {
-            if (!personalizedContent) return;
-            
-            showStatus('📊 Creating PowerPoint presentation...', 'processing');
-            
-            try {
-                // Create new PowerPoint presentation
-                const pptx = new PptxGenJS();
-                
-                // Set presentation properties
-                pptx.author = 'Personalized AI Learning Platform';
-                pptx.company = 'AI Education';
-                pptx.subject = 'Personalized Learning Content';
-                pptx.title = 'Customized Lecture Slides';
-                
-                // Define slide layout and styling
-                const slideLayout = {
-                    name: 'LAYOUT_16x9',
-                    width: 10,
-                    height: 5.625
-                };
-                
-                // Add title slide
-                const titleSlide = pptx.addSlide();
-                titleSlide.addText('Personalized Learning Content', {
-                    x: 1,
-                    y: 1.5,
-                    w: 8,
-                    h: 1.5,
-                    fontSize: 32,
-                    bold: true,
-                    color: '4FACFE',
-                    align: 'center'
-                });
-                
-                const background = document.getElementById('background').value;
-                const interests = document.getElementById('interestsTags').textContent.replace(/×/g, '').trim();
-                
-                titleSlide.addText(`Customized for: ${background} background\nInterests: ${interests || 'General'}`, {
-                    x: 1,
-                    y: 3,
-                    w: 8,
-                    h: 1,
-                    fontSize: 14,
-                    color: '666666',
-                    align: 'center'
-                });
-                
-                // Add each personalized slide
-                personalizedContent.forEach((slideData, index) => {
-                    const slide = pptx.addSlide();
-                    
-                    // Add slide title
-                    slide.addText(slideData.title, {
-                        x: 0.5,
-                        y: 0.3,
-                        w: 9,
-                        h: 0.8,
-                        fontSize: 24,
-                        bold: true,
-                        color: '333333'
-                    });
-                    
-                    // Add slide content
-                    const content = slideData.content.length > 800 ? 
-                        slideData.content.substring(0, 800) + '...' : 
-                        slideData.content;
-                    
-                    slide.addText(content, {
-                        x: 0.5,
-                        y: 1.3,
-                        w: 9,
-                        h: 3.8,
-                        fontSize: 14,
-                        color: '444444',
-                        valign: 'top',
-                        lineSpacing: 20
-                    });
-                    
-                    // Add slide number
-                    slide.addText(`${index + 1}`, {
-                        x: 9.2,
-                        y: 5,
-                        w: 0.5,
-                        h: 0.3,
-                        fontSize: 10,
-                        color: '999999',
-                        align: 'center'
-                    });
-                });
-                
-                // Save the presentation
-                const fileName = `personalized-slides-${new Date().toISOString().split('T')[0]}.pptx`;
-                pptx.writeFile({ fileName: fileName });
-                
-                showStatus('✅ PowerPoint presentation downloaded successfully!', 'success');
-                
-            } catch (error) {
-                console.error('PowerPoint export error:', error);
-                showStatus('❌ Error creating PowerPoint: ' + error.message, 'error');
-            }
-        }
-
-        function exportToText() {
-            if (!personalizedContent) return;
-            
-            const content = personalizedContent.map((slide, index) => 
-                `Slide ${index + 1}: ${slide.title}\n\n${slide.content}\n\n${'='.repeat(50)}\n\n`
-            ).join('');
-            
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'personalized-slides.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        async function copyToClipboard() {
-            if (!personalizedContent) return;
-            
-            const content = personalizedContent.map((slide, index) => 
-                `Slide ${index + 1}: ${slide.title}\n\n${slide.content}\n\n`
-            ).join('---\n\n');
-            
-            try {
-                await navigator.clipboard.writeText(content);
-                showStatus('✅ Content copied to clipboard!', 'success');
-            } catch (err) {
-                showStatus('❌ Failed to copy to clipboard', 'error');
-            }
-        }
-
-        // Load saved API key
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedApiKey = localStorage.getItem('openaiApiKey');
-            if (savedApiKey) {
-                document.getElementById('apiKey').value = savedApiKey;
-            }
-        });
-
-        // Save API key when entered
-        document.getElementById('apiKey').addEventListener('input', function() {
-            localStorage.setItem('openaiApiKey', this.value);
-        });
-    </script>
-</body>
-</html>
+            statusDiv.innerHTML = `<div class="status
