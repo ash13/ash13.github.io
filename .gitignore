@@ -1,0 +1,29 @@
+# Create React App / production build (regenerate with npm run build)
+build/
+
+# Dependencies
+node_modules/
+
+# npm / Yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# npm cache (project-local)
+.npm
+
+# Optional: package tarball output
+*.tgz
+
+# Tooling caches (often under node_modules; also top-level when misconfigured)
+.eslintcache
+
+# Yarn Berry (if used later)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
