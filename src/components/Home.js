@@ -66,8 +66,10 @@ const Home = () => {
           <Heading as="h1" size="2xl" mb={6} fontFamily="'Poppins', sans-serif">
             Hi, I'm Ashvini Varatharaj
           </Heading>
-          <Text fontSize="xl" color="gray.700" lineHeight="tall" mb={6}>
-            I'm a PhD student in Linguistics at the University of California, Santa Barbara, focusing on Computational Linguistics. I am interested in building safe and ethical technologies for children through interdisciplinary research, drawing from linguistics, computational modeling, natural language processing (NLP), and related fields.
+          <Text fontSize="xl" color="gray.700" lineHeight="tall" mb={6} whiteSpace="pre-line">
+            {`I am a fifth year PhD student at the University of California, Santa Barbara, advised by Professor Simon Todd and Professor Laurel Brehm. My research interests focus on the intersection of cognitive science, computational psycholinguistics, child language acquisition and HCI with a strong emphasis on applying machine learning, NLP, statistical modeling techniques to these areas.
+
+Alongside my academic pursuits, I have nurtured a passion for developing project ideas, stemming from my personal interest in understanding emotions, mental health and women's health, and being able to use my skills to build technology that can impact people's lives.`}
           </Text>
           <Link href="/Academic_CV_AshviniV.pdf" isExternal _hover={{ textDecoration: 'none' }}>
             <Button
