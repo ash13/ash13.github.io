@@ -137,7 +137,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
             />
 
             <TimelineItem
-              year="2020"
+              year="2019"
               title="Data Science Intern"
               subtitle="Fidelity Investments"
             />
@@ -149,7 +149,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
             />
 
             <TimelineItem
-              year="2016 - 2018"
+              year="2016 - 2017"
               title="Data Analyst"
               subtitle="Meaww"
             />
