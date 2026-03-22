@@ -33,18 +33,18 @@ const TimelineItem = ({ year, title, subtitle, details }) => {
         zIndex: 1
       }}
     >
-      <Text fontSize="sm" fontWeight="600" color="blue.500" mb={1}>
+      <Text fontSize="xs" fontWeight="500" color="blue.500" mb={1}>
         {year}
       </Text>
-      <Text fontSize="lg" fontWeight="600" color="gray.800" mb={1}>
+      <Text fontSize="sm" fontWeight="normal" color="gray.800" mb={1}>
         {title}
       </Text>
-      <Text fontSize="md" color="gray.600" mb={2}>
+      <Text fontSize="sm" color="gray.600" mb={2}>
         {subtitle}
       </Text>
       <VStack align="start" spacing={1} pl={4} borderLeft="2px" borderColor="gray.100">
         {details.map((detail, index) => (
-          <Text key={index} fontSize="sm" color="gray.600">
+          <Text key={index} fontSize="xs" color="gray.600">
             {detail}
           </Text>
         ))}
@@ -63,10 +63,10 @@ const Home = () => {
         align={{ base: 'center', md: 'start' }}
       >
         <Box flex={1}>
-          <Heading as="h1" size="2xl" mb={6} fontFamily="'Poppins', sans-serif">
+          <Heading as="h1" fontSize="1.25rem" fontWeight="normal" mb={5} fontFamily="'Poppins', sans-serif">
             Hi, I'm Ashvini Varatharaj
           </Heading>
-          <Text fontSize="xl" color="gray.700" lineHeight="tall" mb={6} whiteSpace="pre-line">
+          <Text fontSize="sm" color="gray.700" lineHeight="tall" mb={6} whiteSpace="pre-line">
             {`I am a fifth year PhD student at the University of California, Santa Barbara, advised by Professor Simon Todd and Professor Laurel Brehm. My research interests focus on the intersection of cognitive science, computational psycholinguistics, child language acquisition and HCI with a strong emphasis on applying machine learning, NLP, statistical modeling techniques to these areas.
 
 Alongside my academic pursuits, I have nurtured a passion for developing project ideas, stemming from my personal interest in understanding emotions, mental health and women's health, and being able to use my skills to build technology that can impact people's lives.`}
@@ -117,7 +117,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
       </Flex>
 
       <Box>
-        <Heading as="h2" size="lg" mb={6} fontFamily="'Poppins', sans-serif">
+        <Heading as="h2" fontSize="1.125rem" fontWeight="normal" mb={6} fontFamily="'Poppins', sans-serif">
           Education & Experience
         </Heading>
         <Box position="relative" pl={10}>
@@ -213,7 +213,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
       </Box>
 
       <Box>
-        <Heading as="h2" size="lg" mb={4} fontFamily="'Poppins', sans-serif">
+        <Heading as="h2" fontSize="1.125rem" fontWeight="normal" mb={4} fontFamily="'Poppins', sans-serif">
           Contact
         </Heading>
         <Flex
@@ -225,7 +225,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
           <Link 
             href="mailto:ashvinivaratharaj@ucsb.edu" 
             color="gray.600" 
-            fontSize="lg"
+            fontSize="md"
             _hover={{ 
               color: 'primary.500',
               transform: 'translateY(-2px)',
@@ -241,7 +241,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
             href="https://github.com/ash13" 
             isExternal 
             color="gray.600" 
-            fontSize="lg"
+            fontSize="md"
             _hover={{ 
               color: 'primary.500',
               transform: 'translateY(-2px)',
@@ -257,7 +257,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
             href="https://www.linkedin.com/in/ashvini-varatharaj-2621a79b" 
             isExternal 
             color="gray.600" 
-            fontSize="lg"
+            fontSize="md"
             _hover={{ 
               color: 'primary.500',
               transform: 'translateY(-2px)',
@@ -273,7 +273,7 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
             href="https://scholar.google.com/citations?user=yyTSKksAAAAJ&hl=en&oi=ao" 
             isExternal 
             color="gray.600" 
-            fontSize="lg"
+            fontSize="md"
             _hover={{ 
               color: 'primary.500',
               transform: 'translateY(-2px)',

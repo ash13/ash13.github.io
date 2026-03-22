@@ -8,8 +8,8 @@ const Navbar = () => {
         <Link
           as={RouterLink}
           to="/"
-          fontSize="2xl"
-          fontWeight="bold"
+          fontSize="lg"
+          fontWeight="normal"
           color="gray.800"
           _hover={{ textDecoration: 'none' }}
           fontFamily="'Poppins', sans-serif"
