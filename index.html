@@ -15,7 +15,7 @@
     <script defer="defer" src="/static/js/main.d12bdcce.js"></script>
     <link href="/static/css/main.e6c13ad2.css" rel="stylesheet" />
     <style>
-      .site-recent-events {
+      .other-updates {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         max-width: 1000px;
         margin: 0 auto;
@@ -23,152 +23,162 @@
         background: #fff;
         color: #2d3748;
       }
-      .site-recent-events h2 {
+      .other-updates > h2 {
         font-family: 'Poppins', sans-serif;
         font-size: 1.5rem;
         font-weight: 700;
-        margin: 0 0 1.5rem;
+        margin: 0 0 0.5rem;
         color: #1a202c;
       }
-      .site-recent-events .events-intro {
+      .other-updates > .section-lead {
         font-size: 0.95rem;
-        color: #4a5568;
-        margin-bottom: 1.5rem;
+        color: #718096;
+        margin: 0 0 2rem;
         line-height: 1.6;
       }
-      .site-recent-events .events-intro a {
-        color: #2196f3;
-        text-decoration: none;
-        font-weight: 500;
-      }
-      .site-recent-events .events-intro a:hover {
-        text-decoration: underline;
-      }
-      .site-recent-events ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-      .site-recent-events li {
+      .other-updates .update-card {
         border: 1px solid #edf2f7;
         border-radius: 0.5rem;
-        padding: 1.25rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
         transition: border-color 0.2s, box-shadow 0.2s;
       }
-      .site-recent-events li:hover {
+      .other-updates .update-card:hover {
         border-color: #bee3f8;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
       }
-      .site-recent-events .ev-year {
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: #2196f3;
-        margin-bottom: 0.5rem;
+      .other-updates .update-card:last-child {
+        margin-bottom: 0;
       }
-      .site-recent-events .ev-title {
-        font-size: 1rem;
+      .other-updates .update-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        align-items: start;
+      }
+      @media (min-width: 768px) {
+        .other-updates .update-grid {
+          grid-template-columns: minmax(200px, 340px) 1fr;
+        }
+      }
+      .other-updates .update-figure {
+        margin: 0;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        background: #f7fafc;
+      }
+      .other-updates .update-figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        vertical-align: middle;
+      }
+      .other-updates .update-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.125rem;
         font-weight: 600;
         color: #1a202c;
-        margin-bottom: 0.5rem;
+        margin: 0 0 0.75rem;
       }
-      .site-recent-events .ev-body {
-        font-size: 0.875rem;
+      .other-updates .update-body {
+        font-size: 0.9375rem;
         color: #4a5568;
         line-height: 1.65;
-        margin: 0;
+        margin: 0 0 1rem;
       }
-      .site-recent-events .ev-body a {
-        color: #2196f3;
+      .other-updates .update-body:last-child {
+        margin-bottom: 0;
+      }
+      .other-updates .ext-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #0a66c2;
         text-decoration: none;
-        font-weight: 500;
       }
-      .site-recent-events .ev-body a:hover {
+      .other-updates .ext-link:hover {
         text-decoration: underline;
+      }
+      .other-updates .li-embed-wrap {
+        margin-top: 1rem;
+        max-width: 504px;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+      }
+      .other-updates .li-embed-wrap iframe {
+        display: block;
+        width: 100%;
+        min-height: 520px;
+        border: 0;
       }
     </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <section class="site-recent-events" aria-labelledby="recent-events-heading">
-      <h2 id="recent-events-heading">Recent events</h2>
-      <p class="events-intro">
-        Highlights from my academic site; see the full list and updates on
-        <a href="https://sites.google.com/view/ashvinivaratharaj/home">Google Sites</a>.
-      </p>
-      <ul>
-        <li>
-          <div class="ev-year">2024</div>
-          <div class="ev-title">Paper accepted at IDC</div>
-          <p class="ev-body">
-            Collaborative work with the ChiCI lab, &ldquo;Children As Evaluators: Understanding Emotion Language
-            Acquisition,&rdquo; accepted at ACM Interaction Design and Children (IDC 2024), Delft, Netherlands (June).
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2024</div>
-          <div class="ev-title">Flash talk at ISRE</div>
-          <p class="ev-body">
-            Accepted flash talk at the Conference of the International Society for Research on Emotion (ISRE 2024),
-            Northern Ireland (July).
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2024</div>
-          <div class="ev-title">Workshop paper at CHI</div>
-          <p class="ev-body">
-            Paper on using augmented reality to teach linguistic justice to children accepted at the AR4Social Justice
-            workshop at CHI 2024 (Hawaii).
-            <a href="https://www.chiinhawaii.info/">CHI in Hawaii community statement</a>.
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2024</div>
-          <div class="ev-title">Talk at VALP6</div>
-          <p class="ev-body">
-            Abstract based on my MA thesis on implicit learning in non-Māori speakers accepted at Variation and Language
-            Processing 6 (VALP6), Vigo (June 26&ndash;28).
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2023</div>
-          <div class="ev-title">Talk at LISO</div>
-          <p class="ev-body">
-            Presented at the 26th Annual Conference on Language, Interaction and Social Organization (LISO), UC Santa
-            Barbara.
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2023</div>
-          <div class="ev-title">Poster at CCSC</div>
-          <p class="ev-body">
-            Poster &ldquo;How do we learn to talk about our emotions?&rdquo; at the 14th California Cognitive Science
-            Conference (CCSC), UC Berkeley.
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2023</div>
-          <div class="ev-title">New Venture Fair &mdash; SELie</div>
-          <p class="ev-body">
-            Team selected among semi-finalists at the UCSB New Venture Fair for SELie, aimed at helping children build
-            emotion regulation skills.
-          </p>
-        </li>
-        <li>
-          <div class="ev-year">2022</div>
-          <div class="ev-title">New Venture Competition</div>
-          <p class="ev-body">
-            Pitched an app addressing under-resourced student mental health using wearable and behavioral data; advanced
-            to the next round at the UCSB New Venture Competition.
-          </p>
-        </li>
-      </ul>
+    <section class="other-updates" aria-labelledby="other-updates-heading">
+      <h2 id="other-updates-heading">Other updates</h2>
+      <p class="section-lead">Non-academic highlights &mdash; side projects, entrepreneurship, and community.</p>
+
+      <article class="update-card">
+        <div class="update-grid">
+          <figure class="update-figure">
+            <img
+              src="/images/other-updates/unwrapathon.png"
+              alt="Group photo at the Unwrapathon hackathon with participants outdoors"
+              loading="lazy"
+            />
+          </figure>
+          <div>
+            <h3 class="update-title">Unwrap Hackathon 2025</h3>
+            <p class="update-body">
+              I took part in the Unwrapathon, a hackathon hosted by Unwrap.ai, and our team won the prize for the
+              addressing-misinformation track. We built a Chrome extension that fact-checks a health article by surfacing
+              relevant research papers.
+            </p>
+            <a
+              class="ext-link"
+              href="https://www.linkedin.com/posts/unwrapai_hackathon-unwrap-nlp-ugcPost-7389008998177480704-pvM1?utm_source=share&utm_medium=member_desktop&rcm=ACoAABU1FqoBlW4SraYZKbWdjoZoC40o4pK4_yE"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              View the LinkedIn post
+            </a>
+            <div class="li-embed-wrap">
+              <iframe
+                src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7389008998177480704"
+                title="LinkedIn: Unwrapathon hackathon recap"
+                allowfullscreen=""
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="update-card">
+        <div class="update-grid">
+          <figure class="update-figure">
+            <img
+              src="/images/other-updates/nvc-2023.png"
+              alt="SELie team presenting at the UCSB New Venture Fair with project board"
+              loading="lazy"
+            />
+          </figure>
+          <div>
+            <h3 class="update-title">New Venture Fair 2023</h3>
+            <p class="update-body">
+              For the second year in a row, my team was one of twenty selected to present at the New Venture Fair
+              (NVC semi-finals) at UC Santa Barbara. Our product, SELie, helps children build emotion regulation skills.
+              It was a great chance to pitch and gather feedback.
+            </p>
+          </div>
+        </div>
+      </article>
     </section>
   </body>
 </html>
