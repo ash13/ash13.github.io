@@ -1,10 +1,7 @@
 import { ChakraProvider, Box, extendTheme } from '@chakra-ui/react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Research from './components/Research';
-import Publications from './components/Publications';
-import Awards from './components/Awards';
 
 const theme = extendTheme({
   fonts: {
@@ -34,12 +31,7 @@ function App() {
         <Box minH="100vh" bg="white">
           <Navbar />
           <Box maxW="1000px" mx="auto" px={6} py={12}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/research" element={<Research />} />
-              <Route path="/publications" element={<Publications />} />
-              <Route path="/awards" element={<Awards />} />
-            </Routes>
+            <Home />
           </Box>
         </Box>
       </Router>

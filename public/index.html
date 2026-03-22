@@ -28,14 +28,8 @@
         font-family: 'Poppins', sans-serif;
         font-size: 1.5rem;
         font-weight: 700;
-        margin: 0 0 0.5rem;
-        color: #1a202c;
-      }
-      .other-updates > .section-lead {
-        font-size: 0.95rem;
-        color: #718096;
         margin: 0 0 2rem;
-        line-height: 1.6;
+        color: #1a202c;
       }
       .other-updates .update-card {
         border: 1px solid #edf2f7;
@@ -91,6 +85,13 @@
       .other-updates .update-body:last-child {
         margin-bottom: 0;
       }
+      .other-updates .update-subline {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #2d3748;
+        line-height: 1.5;
+        margin: 0 0 0.5rem;
+      }
       .other-updates .ext-link {
         display: inline-flex;
         align-items: center;
@@ -122,14 +123,28 @@
         height: 551px;
         max-width: 504px;
       }
+      .other-updates .drive-embed-wrap {
+        margin-top: 1rem;
+        max-width: 960px;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        background: #f7fafc;
+      }
+      .other-updates .drive-embed-wrap iframe {
+        display: block;
+        width: 100%;
+        height: min(560px, 70vh);
+        min-height: 420px;
+        border: 0;
+      }
     </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <section class="other-updates" aria-labelledby="other-updates-heading">
-      <h2 id="other-updates-heading">Other updates</h2>
-      <p class="section-lead">Non-academic highlights.</p>
+    <section class="other-updates" aria-labelledby="non-academic-highlights-heading">
+      <h2 id="non-academic-highlights-heading">Non-academic highlights</h2>
 
       <article class="update-card">
         <div class="update-grid">
@@ -220,6 +235,61 @@
             title="LinkedIn: Women in AI #NextInAICampaign feature"
             allowfullscreen=""
           ></iframe>
+        </div>
+      </article>
+
+      <article class="update-card">
+        <div class="update-grid">
+          <figure class="update-figure">
+            <img
+              src="%PUBLIC_URL%/images/other-updates/techtogether-2020.png"
+              alt="TechTogether 2020 team at the IBM table after winning the research challenge"
+              loading="lazy"
+            />
+          </figure>
+          <div>
+            <h3 class="update-title">Tech Together Hackathon 2020</h3>
+            <p class="update-subline">IBM Research Challenge winning team · DELL Driving Human Progress Challenge winners</p>
+            <p class="update-body">
+              I had a great experience at TechTogether 2020 with a passionate, hardworking team. Our project was
+              &ldquo;Drug Re-purposing for Cancer: A Data-Driven Approach,&rdquo; using the dataset from IBM.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="update-card">
+        <div class="update-grid">
+          <figure class="update-figure">
+            <img
+              src="%PUBLIC_URL%/images/other-updates/wramp-2019.png"
+              alt="WRAMP cohort holding Worcester Polytechnic Institute certificates of completion"
+              loading="lazy"
+            />
+          </figure>
+          <div>
+            <h3 class="update-title">WRAMP (Women in Research and Mentorship Program), Dec 2019</h3>
+            <p class="update-body">
+              I completed WRAMP at WPI, mentoring two high school students and one undergraduate through a semester-long
+              research project. Our capstone was &ldquo;Data Science for Social Good.&rdquo; It was a rewarding program to
+              be part of.
+            </p>
+            <a
+              class="ext-link"
+              href="https://drive.google.com/file/d/1ROODFr-nenzvA_G3Tr0l9UVumMgNZdqx/view"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Open final project (Google Drive)
+            </a>
+            <div class="drive-embed-wrap">
+              <iframe
+                src="https://drive.google.com/file/d/1ROODFr-nenzvA_G3Tr0l9UVumMgNZdqx/preview"
+                title="WRAMP final project: Data Science for Social Good (slides)"
+                allow="autoplay"
+              ></iframe>
+            </div>
+          </div>
         </div>
       </article>
     </section>
