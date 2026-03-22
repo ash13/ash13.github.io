@@ -6,7 +6,7 @@ import { SiGooglescholar } from 'react-icons/si';
 
 const MotionBox = motion(Box);
 
-const TimelineItem = ({ year, title, subtitle, details }) => {
+const TimelineItem = ({ year, title, subtitle }) => {
   const ref = React.useRef();
   const isInView = useInView(ref, {
     threshold: 0.2,
@@ -39,16 +39,9 @@ const TimelineItem = ({ year, title, subtitle, details }) => {
       <Text fontSize="sm" fontWeight="normal" color="gray.800" mb={1}>
         {title}
       </Text>
-      <Text fontSize="sm" color="gray.600" mb={2}>
+      <Text fontSize="sm" color="gray.600">
         {subtitle}
       </Text>
-      <VStack align="start" spacing={1} pl={4} borderLeft="2px" borderColor="gray.100">
-        {details.map((detail, index) => (
-          <Text key={index} fontSize="xs" color="gray.600">
-            {detail}
-          </Text>
-        ))}
-      </VStack>
     </MotionBox>
   );
 };
@@ -135,78 +128,42 @@ Alongside my academic pursuits, I have nurtured a passion for developing project
               year="2021 - Present"
               title="Ph.D. in Linguistics (Computational Linguistics)"
               subtitle="University of California, Santa Barbara"
-              details={[
-                'Research focus on Computational Linguistics and Language Acquisition',
-                'Member of CPLS and PRPL labs',
-                'Working on heritage language complexity',
-                'Teaching Assistant for undergraduate linguistics courses'
-              ]}
             />
 
             <TimelineItem
               year="2020 - 2021"
               title="Applied Scientist"
               subtitle="Amazon"
-              details={[
-                'Developed machine learning solutions',
-                'Worked on natural language processing projects',
-                'Implemented large-scale AI systems'
-              ]}
             />
 
             <TimelineItem
               year="2020"
               title="Data Science Intern"
               subtitle="Fidelity Investments"
-              details={[
-                'Developed machine learning solutions for financial data',
-                'Implemented data analytics pipelines',
-                'Applied statistical analysis to financial datasets'
-              ]}
             />
 
             <TimelineItem
               year="2018 - 2020"
               title="M.S. in Computer Science & Research Assistant"
               subtitle="Worcester Polytechnic Institute"
-              details={[
-                'Research in Educational Technology with ASSISTments lab',
-                'Focus on Human-Computer Interaction',
-                'Developed learning analytics solutions'
-              ]}
             />
 
             <TimelineItem
               year="2016 - 2018"
               title="Data Analyst"
               subtitle="Meaww"
-              details={[
-                'Led data analytics for social media startup',
-                'Developed user engagement metrics',
-                'Implemented data-driven content strategies'
-              ]}
             />
 
             <TimelineItem
               year="2015 - 2016"
               title="Software Engineer"
               subtitle="Hewlett Packard R&D"
-              details={[
-                'Developed enterprise software solutions',
-                'Worked on R&D projects',
-                'Implemented innovative technology solutions'
-              ]}
             />
 
             <TimelineItem
               year="2011 - 2015"
               title="B.E. in Information Science and Engineering"
               subtitle="BMS College of Engineering"
-              details={[
-                'Foundation in computer science and engineering',
-                'Focus on information systems',
-                'Software development fundamentals'
-              ]}
             />
           </VStack>
         </Box>
